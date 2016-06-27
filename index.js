@@ -4,6 +4,7 @@ var app = express();
 var fs = require('fs');
 var exec = require('child_process').exec;
 var cors = require('cors');
+var portConfig = require('./config.port.js');
 
 var outputDir = 'output/';
 var tempDir = 'tmp/';
@@ -75,6 +76,6 @@ function handleDownloadPostRequest(req, res) {
 
 }
 
-var server = app.listen(3000, function() {
+var server = app.listen(portConfig.port, function() {
 	console.log('listening');
 });
