@@ -17,15 +17,15 @@ app.post('/:font/:user',bodyParser.raw({type:'application/otf'}), function(req, 
 
 			exec('./removeOverlap.pe ' + fileName + '.otf', function(err) {
 				if (err) {
-					console.log('Error while converting font with fileName: '+ fileName);
+					console.log('Error while converting font with fileName: '+ fileName + err.message);
 					fs.unlinkSync('tmp/' + fileName + '.otf');
 					return res.sendStatus(500);
 				}
 
 				res.download('output/' + fileName + '.otf', function() {
 					console.log('Successfully converted font with fileName: '+ fileName);
-					fs.unlinkSync('output/' + fileName + '.otf');
-					fs.unlinkSync('tmp/' + fileName + '.otf');
+					//fs.unlinkSync('output/' + fileName + '.otf');
+					//fs.unlinkSync('tmp/' + fileName + '.otf');
 				});
 			});
 		});
@@ -36,17 +36,15 @@ app.post('/:fontFam/:fontStyle/:user',bodyParser.raw({type:'application/otf'}), 
 	var fileName = req.params.user + '_' + req.params.fontFam + '-' + req.params.fontStyle + (new Date()).getTime();
 	fs.writeFile('tmp/' + fileName + '.otf',req.body,
 		function(err) {
-
 			exec('./removeOverlap.pe ' + fileName + '.otf', function(err) {
 				if (err) {
-					console.log('Error while converting font with fileName: '+ fileName);
+					console.log('Error while converting font with fileName: '+ fileName + err.message);
 					fs.unlinkSync('tmp/' + fileName + '.otf');
 					return res.sendStatus(500);
 				}
 
 				res.download('output/' + fileName + '.otf', function() {
 					console.log('Successfully converted font with fileName: '+ fileName);
-					fs.unlinkSync('output/' + fileName + '.otf');
 					fs.unlinkSync('tmp/' + fileName + '.otf');
 				});
 			});
