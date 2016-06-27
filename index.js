@@ -53,6 +53,6 @@ app.post('/:fontFam/:fontStyle/:user',bodyParser.raw({type:'application/otf'}), 
 		});
 });
 
-var server = app.listen(80, function() {
+var server = app.listen(3000, function() {
 	console.log('listening');
 });
