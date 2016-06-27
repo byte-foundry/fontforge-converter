@@ -1,3 +1,3 @@
-var portConfig = {
-	port: 80
-};
+var port = 80;
+
+exports.port = port;
