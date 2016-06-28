@@ -1,6 +1,19 @@
+/* global styles */
 h1 {
 	margin-bottom: 40px;
 }
-ul > li:hover {
+ul > li:hover,
+.active_user {
 	background-color: #EEE;
+}
+button#load_more {
+	margin: 20px 0 40px;
+}
+
+/* specific styles */
+.hidden_font {
+	display: none;
+}
+#user_list li:hover {
+	cursor: pointer;
 }

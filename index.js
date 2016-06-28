@@ -42,6 +42,10 @@ app.post('/:fontFam/:fontStyle/:user', bodyParser.raw({type:'application/otf'}),
 app.post('/:fontFam/:fontStyle/:user/:template', bodyParser.raw({type:'application/otf'}), handleDownloadPostRequest);
 app.post('/:fontFam/:fontStyle/:user/:template/:overlap', bodyParser.raw({type:'application/otf'}), handleDownloadPostRequest);
 
+var server = app.listen(portConfig.port, function() {
+	console.log('listening');
+});
+
 /**
 *	Handle Dowload Request
 * Will output a font file on the server and start the download
@@ -50,14 +54,19 @@ app.post('/:fontFam/:fontStyle/:user/:template/:overlap', bodyParser.raw({type:'
 * @param {object} - the response
 */
 function handleDownloadPostRequest(req, res) {
+	// build file name
 	var fileName = req.params.user + '_' + req.params.fontFam + '-' + req.params.fontStyle;
 
+	// add template to the file name
 	if (req.params.template) {
 		fileName += '_' + req.params.template;
 	}
 
+	// add a timestamp-based id the the file name
 	fileName += '_' + (new Date()).getTime();
 
+	// the 'merged' button has been clicked
+	// run the removeOverlap script
 	if (req.params.overlap) {
 		fs.writeFile(tempDir + fileName + '.otf',req.body, function(err) {
 				exec('./removeOverlap.pe ' + fileName + '.otf', function(err) {
@@ -85,7 +94,3 @@ function handleDownloadPostRequest(req, res) {
 	}
 
 }
-
-var server = app.listen(portConfig.port, function() {
-	console.log('listening');
-});

@@ -9,17 +9,19 @@ html
 			include ../css/styles.css
 	body
 		h1.text-center= header1
+		if loadMore > 0
+			div.container
+				div.row.text-center
+					button.btn.btn-default.display_more#load_more Load more, <span id='more_count'>#{loadMore}</span> fonts remaining
 		div.container
 			div.row.text-center
 				div.col-md-6
-					ul.list-group
+					ul.list-group#user_list
 						each user in users
 							li.list-group-item= user
 				div.col-md-6
-					- var n = 0
-					ul.list-group.text-center
-						while n < limit
-							li.list-group-item= list[n]
-							- n++
+					ul.list-group.text-center#font_list
+						each file in files
+							li.list-group-item= file
 		script
 			include ../js/client.js
