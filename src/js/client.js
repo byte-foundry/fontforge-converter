@@ -143,7 +143,7 @@ function updateDocument(data) {
 
 		for (var i=0; i<users.length; i++) {
 			if (users[i].classList.contains(ACTIVE_USER_CLASSNAME)) {
-				// if the is a filter currently applied, different from 'show all users' (index 0)
+				// if there is a filter currently applied, different from 'show all users' (index 0)
 				if (i > 0) {
 					currentFilter = users[i].innerText;
 				}
