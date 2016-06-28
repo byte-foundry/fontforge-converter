@@ -4,17 +4,20 @@
   "description": "remove overlap service using fontforge",
   "main": "index.js",
   "scripts": {
+    "start-dev": "nodemon index.js",
     "test": "mocha test/*.js --colors"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.7.1",
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "jade": "^1.11.0"
   },
   "devDependencies": {
     "chai": "^3.4.0",
     "mocha": "^2.3.3",
+    "nodemon": "^1.9.2",
     "supertest": "^1.1.0"
   }
 }

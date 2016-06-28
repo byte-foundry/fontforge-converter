@@ -5,9 +5,12 @@ var fs = require('fs');
 var exec = require('child_process').exec;
 var cors = require('cors');
 var portConfig = require('./config.port.js');
+var routes = require('./routes.js');
 
 var outputDir = 'output/';
 var tempDir = 'tmp/';
+
+routes.setRoutes(app);
 
 app.use(cors({
 	origin:['https://newui.prototypo.io','https://dev.prototypo.io','https://app.prototypo.io', 'http://localhost:9000', 'https://beta.prototypo.io']
@@ -39,6 +42,13 @@ app.post('/:fontFam/:fontStyle/:user', bodyParser.raw({type:'application/otf'}),
 app.post('/:fontFam/:fontStyle/:user/:template', bodyParser.raw({type:'application/otf'}), handleDownloadPostRequest);
 app.post('/:fontFam/:fontStyle/:user/:template/:overlap', bodyParser.raw({type:'application/otf'}), handleDownloadPostRequest);
 
+/**
+*	Handle Dowload Request
+* Will output a font file on the server and start the download
+* file name structure : user_fontName_template_id
+* @param {object} - the request
+* @param {object} - the response
+*/
 function handleDownloadPostRequest(req, res) {
 	var fileName = req.params.user + '_' + req.params.fontFam + '-' + req.params.fontStyle;
 

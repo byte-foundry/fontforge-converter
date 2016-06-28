@@ -1,0 +1,25 @@
+doctype html
+html
+	head
+		meta(name='charset', content='utf-8')
+		title= title
+		style
+			include ../css/bootstrap.min.css
+		style
+			include ../css/styles.css
+	body
+		h1.text-center= header1
+		div.container
+			div.row.text-center
+				div.col-md-6
+					ul.list-group
+						each user in users
+							li.list-group-item= user
+				div.col-md-6
+					- var n = 0
+					ul.list-group.text-center
+						while n < limit
+							li.list-group-item= list[n]
+							- n++
+		script
+			include ../js/client.js
