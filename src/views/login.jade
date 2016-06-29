@@ -1,0 +1,22 @@
+doctype html
+html
+	head
+		meta(name='charset', content='utf-8')
+		title= title
+		style
+			include ../css/bootstrap.min.css
+		style
+			include ../css/styles.css
+	body
+		h1.text-center= header1
+		div.container
+			div.row.space-after
+				div.col-md-12.text-center
+					fieldset
+						form(method='post' action='')
+							label= 'password'
+							input(type='password' name='login_password')
+			if failed
+				div.row.space-after
+					div.col-md-12.text-center
+						p.error.label.label-danger= errorMessage

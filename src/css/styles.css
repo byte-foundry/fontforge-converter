@@ -2,6 +2,9 @@
 h1 {
 	margin-bottom: 40px;
 }
+label {
+	padding-right: 20px;
+}
 ul > li:hover,
 .active_user {
 	background-color: #EEE;
@@ -16,4 +19,10 @@ button#load_more {
 }
 #user_list li:hover {
 	cursor: pointer;
+}
+p.error {
+	font-size: 1.2em;
+}
+.row.space-after {
+	margin-bottom: 40px;
 }

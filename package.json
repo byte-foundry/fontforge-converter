@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^0.8.7",
     "cors": "^2.7.1",
     "express": "^4.13.3",
+    "express-session": "^1.13.0",
     "jade": "^1.11.0"
   },
   "devDependencies": {

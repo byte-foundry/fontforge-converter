@@ -43,7 +43,7 @@ app.post('/:fontFam/:fontStyle/:user/:template', bodyParser.raw({type:'applicati
 app.post('/:fontFam/:fontStyle/:user/:template/:overlap', bodyParser.raw({type:'application/otf'}), handleDownloadPostRequest);
 
 var server = app.listen(portConfig.port, function() {
-	console.log('listening');
+	console.log('listening on port ' + portConfig.port);
 });
 
 /**
