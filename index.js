@@ -11,12 +11,15 @@ var compression = require('compression');
 var outputDir = 'output/';
 var tempDir = 'tmp/';
 
+// set routes
 routes.setRoutes(app);
 
+// add cross origin authorizations
 app.use(cors({
 	origin:['https://newui.prototypo.io','https://dev.prototypo.io','https://app.prototypo.io', 'http://localhost:9000', 'https://beta.prototypo.io']
 }));
 
+// enable gzip compressoin
 app.use(compression());
 
 app.post('/:font/:user',bodyParser.raw({type:'application/otf'}), function(req, res) {

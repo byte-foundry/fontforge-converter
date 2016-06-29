@@ -154,6 +154,7 @@ function updateDocument(data) {
 		for (var i=0; i<addedFonts.length; i++) {
 			newLi = document.createElement('li');
 			newLi.innerText = addedFonts[i];
+			newLi.style.fontFamily = addedFonts[i].substring(addedFonts[i].indexOf('_')+1).replace(/(\.[A-z]*)$/g,'');
 			newLi.className = 'list-group-item';
 			fontsToAdd.push(newLi);
 		}

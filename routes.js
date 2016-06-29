@@ -90,6 +90,25 @@ var setRoutes = function(app){
 		}
 	});
 
+	// set font access route
+	app.get('/output/:font', function(req, res) {
+		if (req.session.user) {
+			if (req.params) {
+				if (req.params.font) {
+					fs.readFile('output/' + req.params.font, function(err, data) {
+						if (err) {
+							res.status(404).end(err.message);
+						} else {
+							res.send(data);
+						}
+					});
+				}
+			}
+		} else {
+			res.status(403).end('Acces denied');
+		}
+	});
+
 	/**
 	* Display file list
 	* @param {object} - the request
@@ -104,10 +123,12 @@ var setRoutes = function(app){
 				console.log(err.message);
 			} else {
 				var users = getUsers(files);
+				var fontFamilies = getFontFamilies(files);
 				var limit = Math.min(updateLimit, files.length);
 				var limited = limit === updateLimit;
-				var limitedFiles = files.slice(0,updateLimit);
+				var limitedFiles = files.slice(0, updateLimit);
 				var limitedUsers = getUsers(limitedFiles);
+				var limitedFontFamilies = getFontFamilies(limitedFiles);
 
 				res.render('fontList', {
 					title: 'Font listing',
@@ -115,6 +136,7 @@ var setRoutes = function(app){
 					limit: limit,
 					files: limited ? limitedFiles : files,
 					users: limited ? limitedUsers : users,
+					fontFamilies: limited ? limitedFontFamilies : fontFamilies,
 					loadMore: (files.length - limit)
 				});
 			}
@@ -135,15 +157,18 @@ var setRoutes = function(app){
 				console.log(err.message);
 			} else {
 				var users = getUsers(files);
+				var fontFamilies = getFontFamilies(files);
 				var limit = Math.min(updateLimit, files.length);
 				var limited = limit === updateLimit;
-				var limitedFiles = files.slice(0,updateLimit);
+				var limitedFiles = files.slice(0, updateLimit);
 				var limitedUsers = getUsers(limitedFiles);
+				var limitedFontFamilies = getFontFamilies(limitedFiles);
 
 				res.send({
 					limit: limit,
 					files: limited ? limitedFiles : files,
 					users: limited ? limitedUsers : users,
+					fontFamilies: limited ? limitedFontFamilies : fontFamilies,
 					loadMore: (files.length - limit)
 				});
 			}
@@ -183,6 +208,23 @@ function getUsers(files) {
 	});
 
 	return users;
+}
+
+/**
+* get fonts families from an array of filenames
+* @param {array} - an array of string (filenames)
+* @return {array} families - an array of unique usernames
+*/
+function getFontFamilies(files) {
+	var families = files.filter(function(file, index, array) {
+		// get rid of the duplicates
+		return array.indexOf(file) === index;
+	}).map(function(file) {
+		var family = file.substring(file.indexOf('_')+1).replace(/(\.[A-z]*)$/g,'');
+		return { family: family, file: file};
+	});
+
+	return families;
 }
 
 exports.setRoutes = setRoutes;

@@ -7,6 +7,10 @@ html
 			include ../css/bootstrap.min.css
 		style
 			include ../css/styles.css
+		style
+			each fontFamily in fontFamilies
+				| @font-face{font-family: #{fontFamily.family}; src: url('output/#{fontFamily.file}');} 
+				
 	body.fontlist
 		header
 			h1.text-center= header1
@@ -27,6 +31,7 @@ html
 				div.col-md-6
 					ul.list-group.text-center#font_list
 						each file in files
-							li.list-group-item= file
+							- var family = file.substring(file.indexOf('_')+1).replace(/(\.[A-z]*)$/g,'');
+							li.list-group-item(style='font-family:#{family};')= file
 		script
 			include ../js/client.js
