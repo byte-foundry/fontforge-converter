@@ -13,6 +13,7 @@ var setRoutes = function(app){
 	var DEFAULT_LIMIT = 50;
 	var PASS_HASH = '$2a$10$42ZrBx35lxqyq9vndYYGBeqFEKCVvqNBfKXBPrBIY1yzpk5LBg5KS';
 	var updateLimit = DEFAULT_LIMIT;
+	var sessionSetup;
 
 	// user urlencoded
 	app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,19 +23,27 @@ var setRoutes = function(app){
 	app.set('view engine','jade');
 
 	// configure sessions
-	app.use(session({
+	sessionSetup = {
 	  secret: 'fontlist-output',
 	  resave: false,
-	  saveUninitialized: true,
-	  cookie: { secure: true }
-	}));
+	  saveUninitialized: true
+	}
+
+	if (app.get('env') === 'production') {
+	  sessionSetup.cookie.secure = true // serve secure cookies
+	}
+	app.use(session(sessionSetup));
 
 	// set login route
 	app.get('/login', function(req, res) {
-		res.render('login', {
-			title: 'Fontlist - Login',
-			header1: 'Please log in'
-		});
+		if (!req.session.user) {
+			res.render('login', {
+				title: 'Fontlist - Login',
+				header1: 'Please log in'
+			});
+		} else {
+			res.redirect('/display');
+		}
 	});
 	app.post('/login', function(req, res) {
 		if (req.body.login_password) {
@@ -57,19 +66,27 @@ var setRoutes = function(app){
 		}
 	});
 
-	// redirect to login if no session
+	// set display route
 	app.get('/display', function(req, res) {
-		if (!req.session) {
+		// redirect to login if no session
+		if (!req.session.user) {
 			res.redirect('login');
 		} else {
 			displayFileList(req, res);
 		}
 	});
 	app.get('/display/:length', function(req, res) {
-		if (!req.session) {
+		// redirect to login if no session
+		if (!req.session.user) {
 			res.redirect('login');
 		} else {
 			updateFileList(req, res);
+		}
+	});
+	app.post('/display', function(req, res) {
+		if (req.body.log_out) {
+			req.session.user = undefined;
+			res.redirect('/login');
 		}
 	});
 

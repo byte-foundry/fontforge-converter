@@ -7,8 +7,13 @@ html
 			include ../css/bootstrap.min.css
 		style
 			include ../css/styles.css
-	body
-		h1.text-center= header1
+	body.fontlist
+		header
+			h1.text-center= header1
+			div.logout_form
+				form(method='post' action='')
+					button.btn.btn-default(type='submit' name='log_out' value='true')= 'Log out'
+					
 		if loadMore > 0
 			div.container
 				div.row.text-center

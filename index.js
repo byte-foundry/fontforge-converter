@@ -6,6 +6,7 @@ var exec = require('child_process').exec;
 var cors = require('cors');
 var portConfig = require('./config.port.js');
 var routes = require('./routes.js');
+var compression = require('compression');
 
 var outputDir = 'output/';
 var tempDir = 'tmp/';
@@ -15,6 +16,8 @@ routes.setRoutes(app);
 app.use(cors({
 	origin:['https://newui.prototypo.io','https://dev.prototypo.io','https://app.prototypo.io', 'http://localhost:9000', 'https://beta.prototypo.io']
 }));
+
+app.use(compression());
 
 app.post('/:font/:user',bodyParser.raw({type:'application/otf'}), function(req, res) {
 
