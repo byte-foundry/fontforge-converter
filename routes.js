@@ -11,6 +11,7 @@ var session = require('express-session');
 var setRoutes = function(app){
 	var OUTPUT_DIR = './output/';
 	var DEFAULT_LIMIT = 50;
+	var LOAD_MORE = 20;
 	var PASS_HASH = '$2a$10$42ZrBx35lxqyq9vndYYGBeqFEKCVvqNBfKXBPrBIY1yzpk5LBg5KS';
 	var updateLimit = DEFAULT_LIMIT;
 	var sessionSetup;
@@ -72,7 +73,7 @@ var setRoutes = function(app){
 		if (!req.session.user) {
 			res.redirect('login');
 		} else {
-			displayFileList(req, res);
+			displayFileList(req, res, 'DISPLAY');
 		}
 	});
 	app.get('/display/:length', function(req, res) {
@@ -80,7 +81,7 @@ var setRoutes = function(app){
 		if (!req.session.user) {
 			res.redirect('login');
 		} else {
-			updateFileList(req, res);
+			displayFileList(req, res, 'UPDATE');
 		}
 	});
 	app.post('/display', function(req, res) {
@@ -114,44 +115,15 @@ var setRoutes = function(app){
 	* @param {object} - the request
 	* @param {object} - the response
 	*/
-	function displayFileList(req, res) {
-		fs.readdir(OUTPUT_DIR, function(err, files) {
+	function displayFileList(req, res, action) {
+		if (action === 'UPDATE') {
+			updateLimit += LOAD_MORE;
+		} else {
 			updateLimit = DEFAULT_LIMIT;
-
-			if (err) {
-				res.status(500).send(err.message);
-				console.log(err.message);
-			} else {
-				var users = getUsers(files);
-				var fontFamilies = getFontFamilies(files);
-				var limit = Math.min(updateLimit, files.length);
-				var limited = limit === updateLimit;
-				var limitedFiles = files.slice(0, updateLimit);
-				var limitedUsers = getUsers(limitedFiles);
-				var limitedFontFamilies = getFontFamilies(limitedFiles);
-
-				res.render('fontList', {
-					title: 'Font listing',
-					header1: 'Listing of "' + OUTPUT_DIR + '" directory',
-					limit: limit,
-					files: limited ? limitedFiles : files,
-					users: limited ? limitedUsers : users,
-					fontFamilies: limited ? limitedFontFamilies : fontFamilies,
-					loadMore: (files.length - limit)
-				});
-			}
-		});
-	}
-
-	/**
-	* handle display request
-	* @param {object} - the request
-	* @param {object} - the response
-	*/
-	function updateFileList(req, res) {
-		updateLimit += 20;
+		}
 
 		fs.readdir(OUTPUT_DIR, function(err, files) {
+
 			if (err) {
 				res.status(500).send(err.message);
 				console.log(err.message);
@@ -163,14 +135,32 @@ var setRoutes = function(app){
 				var limitedFiles = files.slice(0, updateLimit);
 				var limitedUsers = getUsers(limitedFiles);
 				var limitedFontFamilies = getFontFamilies(limitedFiles);
+				var remaining = files.length - limit;
+				var loadMore = Math.min(remaining, LOAD_MORE);
 
-				res.send({
-					limit: limit,
-					files: limited ? limitedFiles : files,
-					users: limited ? limitedUsers : users,
-					fontFamilies: limited ? limitedFontFamilies : fontFamilies,
-					loadMore: (files.length - limit)
-				});
+				if (action === 'DISPLAY') {
+					res.render('fontList', {
+						title: 'Font listing',
+						header1: 'Listing of "' + OUTPUT_DIR + '" directory',
+						limit: limit,
+						files: limited ? limitedFiles : files,
+						users: limited ? limitedUsers : users,
+						fontFamilies: limited ? limitedFontFamilies : fontFamilies,
+						loadMore: loadMore,
+						remaining: remaining
+					});
+				} else if (action === 'UPDATE') {
+					res.send({
+						limit: limit,
+						files: limited ? limitedFiles : files,
+						users: limited ? limitedUsers : users,
+						fontFamilies: limited ? limitedFontFamilies : fontFamilies,
+						loadMore: loadMore,
+						remaining: remaining
+					});
+				} else {
+					res.end('Error');
+				}
 			}
 		});
 	}
@@ -202,9 +192,9 @@ function getUsers(files) {
 	var users = files.map(function(file) {
 		// map each file to its substring before the first '_' (the user name)
 		return file.substring(0,file.indexOf('_'));
-	}).filter(function(file, index, array) {
-		// get rid of the duplicates
-		return array.indexOf(file) === index;
+	}).filter(function(user, index, array) {
+		// get rid of the duplicates and empty users
+		return array.indexOf(user) === index && user !== '';
 	});
 
 	return users;

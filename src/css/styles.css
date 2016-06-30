@@ -18,8 +18,9 @@ button#load_more {
 header {
 	text-align: center;
 }
-.fontlist h1, .fontlist .logout_form {
-	display: inline-block;
+.logout_form {
+	padding: 20px 20px 0 0;
+	text-align: right;
 }
 .hidden_font {
 	display: none;

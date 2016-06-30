@@ -115,13 +115,15 @@ function getMoreFiles() {
 */
 function updateDocument(data) {
 	var moreCount = document.getElementById('more_count');
+	var remainingCount = document.getElementById('remaining_count');
 	var userList = document.getElementById('user_list');
 	var fontList = document.getElementById('font_list');
 
-	if (moreCount) {
+	if (remainingCount) {
 		// if we can still load some more
-		if (data.loadMore) {
+		if (data.remaining) {
 			moreCount.innerText = data.loadMore;
+			remainingCount.innerText = data.remaining;
 		} else {
 			// disable the 'load more' button if there is no more fonts to load
 			moreCount.parentNode.classList.add('disabled');

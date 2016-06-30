@@ -13,15 +13,15 @@ html
 				
 	body.fontlist
 		header
-			h1.text-center= header1
 			div.logout_form
 				form(method='post' action='')
 					button.btn.btn-default(type='submit' name='log_out' value='true')= 'Log out'
+			h1.text-center= header1
 					
-		if loadMore > 0
+		if remaining > 0
 			div.container
 				div.row.text-center
-					button.btn.btn-default.display_more#load_more Load more, <span id='more_count'>#{loadMore}</span> fonts remaining
+					button.btn.btn-default.display_more#load_more Load <span id='more_count'>#{loadMore}</span> more, <span id='remaining_count'>#{remaining}</span> fonts remaining
 		div.container
 			div.row.text-center
 				div.col-md-6
