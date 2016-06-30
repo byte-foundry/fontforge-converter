@@ -4,7 +4,7 @@ var app = express();
 var fs = require('fs');
 var exec = require('child_process').exec;
 var cors = require('cors');
-var portConfig = require('./config.port.js');
+var config = require('./config.js');
 var routes = require('./routes.js');
 var compression = require('compression');
 
@@ -16,7 +16,7 @@ routes.setRoutes(app);
 
 // add cross origin authorizations
 app.use(cors({
-	origin:['https://newui.prototypo.io','https://dev.prototypo.io','https://app.prototypo.io', 'http://localhost:9000', 'https://beta.prototypo.io']
+	origin:['https://newui.prototypo.io','https://dev.prototypo.io','https://app.prototypo.io',(config.host + config.port), 'https://beta.prototypo.io']
 }));
 
 // enable gzip compressoin
@@ -48,8 +48,8 @@ app.post('/:fontFam/:fontStyle/:user', bodyParser.raw({type:'application/otf'}),
 app.post('/:fontFam/:fontStyle/:user/:template', bodyParser.raw({type:'application/otf'}), handleDownloadPostRequest);
 app.post('/:fontFam/:fontStyle/:user/:template/:overlap', bodyParser.raw({type:'application/otf'}), handleDownloadPostRequest);
 
-var server = app.listen(portConfig.port, function() {
-	console.log('listening on port ' + portConfig.port);
+var server = app.listen(config.port, function() {
+	console.log('listening on port ' + config.port);
 });
 
 /**

@@ -96,7 +96,7 @@ function showUserFonts(event) {
 function getMoreFiles() {
 	var xhr = new XMLHttpRequest();
 	// create a GET request for the 'display/' express route
-	xhr.open('GET', 'http://localhost:3000/display/more', true);
+	xhr.open('GET', '/display/more', true);
 	xhr.addEventListener('readystatechange', function() {
 		// if the request is completed
 		if (xhr.readyState === 4) {
@@ -129,6 +129,14 @@ function updateDocument(data) {
 			moreCount.parentNode.classList.add('disabled');
 			moreCount.parentNode.removeEventListener('click',getMoreFiles);
 			moreCount.parentNode.innerText = 'All fonts are displayed';
+		}
+	}
+
+	if (data.fontFamilies) {
+		if (data.fontFamilies.length > 0) {
+			data.fontFamilies.forEach(function(font) {
+				document.fonts.add(new FontFace(font.family, 'url(/output/' + font.file + ')'));
+			});
 		}
 	}
 

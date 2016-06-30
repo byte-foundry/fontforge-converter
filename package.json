@@ -4,7 +4,8 @@
   "description": "remove overlap service using fontforge",
   "main": "index.js",
   "scripts": {
-    "start-dev": "nodemon index.js",
+    "start": "node index.js",
+    "start-dev": "NODE_ENV=development nodemon index.js",
     "test": "mocha test/*.js --colors"
   },
   "author": "",
