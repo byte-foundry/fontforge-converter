@@ -123,6 +123,8 @@ var setRoutes = function(app){
 		}
 
 		fs.readdir(OUTPUT_DIR, function(err, files) {
+			// get rid of the hidden files
+			files = files.filter(function(file) { return file.indexOf('.') !== 0 });
 
 			if (err) {
 				res.status(500).send(err.message);
