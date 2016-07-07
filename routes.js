@@ -128,11 +128,14 @@ var setRoutes = function(app){
 			// get rid of the hidden files
 			var files = files.filter(function(file) { return file.indexOf('.') !== 0 })
 				.sort(function(a, b) {
-					var aTokens = a.split('.')[0].split('_');
-					var bTokens = b.split('.')[0].split('_');
+					var aTokens = a.split('_');
+					var bTokens = b.split('_');
 
-					var aTime = aTokens[aTokens.length - 1];
-					var bTime = bTokens[bTokens.length - 1];
+					var aTimeWithExt = aTokens[aTokens.length - 1];
+					var bTimeWithExt = bTokens[bTokens.length - 1];
+
+					var aTime = aTimeWithExt.split('.')[0];
+					var bTime = bTimeWithExt.split('.')[0];
 
 					return bTime - aTime;
 				})
