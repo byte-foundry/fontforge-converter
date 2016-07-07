@@ -126,7 +126,16 @@ var setRoutes = function(app){
 
 		fs.readdir(OUTPUT_DIR, function(err, files) {
 			// get rid of the hidden files
-			files = files.filter(function(file) { return file.indexOf('.') !== 0 })
+			var files = files.filter(function(file) { return file.indexOf('.') !== 0 })
+				.sort(function(a, b) {
+					var aTokens = a.split('.')[0].split('_');
+					var bTokens = b.split('.')[0].split('_');
+
+					var aTime = aTokens[aTokens.length - 1];
+					var bTime = bTokens[bTokens.length - 1];
+
+					return bTime - aTime;
+				})
 				.map(function(file) {
 					var fileTokens = file.split('_');
 					return {

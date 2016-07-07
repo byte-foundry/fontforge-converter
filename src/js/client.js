@@ -1,4 +1,3 @@
-var config = require('../config.js');
 // constants
 var ACTIVE_USER_CLASSNAME = 'active_user';
 var HIDDEN_FONT_CLASSNAME = 'hidden_font';
@@ -26,21 +25,8 @@ if (userList && fontList) {
 
 	// insert first 'show all user' item in list
 	userList.insertBefore(showAllUsersItem, userList.firstChild);
-	// set data-user attributes
-	setDataUser(fonts);
 	// set click event for user-filtering
 	setClickEvent(users);
-}
-
-/**
-* loop over fonts and set their data-user attribute
-* @param {array} - array of elements which need attribute setting
-*/
-function setDataUser(elements) {
-	for (var i=0; i<elements.length; i++) {
-		// set data-user attribute with the part of the string before the first '_' (id of a user)
-		elements[i].setAttribute('data-user', elements[i].innerText.substring(0,elements[i].innerText.indexOf('_')))
-	}
 }
 
 /**
@@ -65,7 +51,7 @@ function showUserFonts(event) {
 		var id = event.target.innerText;
 
 		if (id !== '' && userList && fontList) {
-			var fonts = fontList.getElementsByTagName('li');
+			var fonts = fontList.querySelectorAll('div.file');
 			var users = userList.getElementsByTagName('li');
 			// iterate over users to toggle their active class
 			for (var i=0; i<users.length; i++) {
@@ -136,7 +122,7 @@ function updateDocument(data) {
 	if (data.fontFamilies) {
 		if (data.fontFamilies.length > 0) {
 			data.fontFamilies.forEach(function(font) {
-				document.fonts.add(new FontFace(font.family, 'url(/' + config.outputDir + font.file + ')'));
+				document.fonts.add(new FontFace(font.family, 'url(/output/'+ font.file + ')'));
 			});
 		}
 	}
@@ -178,8 +164,6 @@ function updateDocument(data) {
 			usersToAdd.push(newLi);
 		}
 
-		// loop over fonts and set their data-user attribute
-		setDataUser(fontsToAdd);
 		for (var i=0; i<fontsToAdd.length; i++){
 			if (currentFilter) {
 				if (fontsToAdd[i].getAttribute('data-user') !== currentFilter) {
