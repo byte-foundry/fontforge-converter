@@ -1,3 +1,4 @@
+var config = require('../config.js');
 // constants
 var ACTIVE_USER_CLASSNAME = 'active_user';
 var HIDDEN_FONT_CLASSNAME = 'hidden_font';
@@ -135,7 +136,7 @@ function updateDocument(data) {
 	if (data.fontFamilies) {
 		if (data.fontFamilies.length > 0) {
 			data.fontFamilies.forEach(function(font) {
-				document.fonts.add(new FontFace(font.family, 'url(/output/' + font.file + ')'));
+				document.fonts.add(new FontFace(font.family, 'url(/' + config.outputDir + font.file + ')'));
 			});
 		}
 	}

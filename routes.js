@@ -2,14 +2,16 @@ var fs = require('fs');
 var express = require('express');
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt');
+var moment = require('moment');
 var session = require('express-session');
+var config = require('./config.js');
 
 /**
 * set route for the application
 * @param {object} - the application
 */
 var setRoutes = function(app){
-	var OUTPUT_DIR = './output/';
+	var OUTPUT_DIR = './' + config.outputDir;
 	var DEFAULT_LIMIT = 50;
 	var LOAD_MORE = 20;
 	var PASS_HASH = '$2a$10$42ZrBx35lxqyq9vndYYGBeqFEKCVvqNBfKXBPrBIY1yzpk5LBg5KS';
@@ -96,7 +98,7 @@ var setRoutes = function(app){
 		if (req.session.user) {
 			if (req.params) {
 				if (req.params.font) {
-					fs.readFile('output/' + req.params.font, function(err, data) {
+					fs.readFile(config.outputDir + req.params.font, function(err, data) {
 						if (err) {
 							res.status(404).end(err.message);
 						} else {
@@ -124,7 +126,15 @@ var setRoutes = function(app){
 
 		fs.readdir(OUTPUT_DIR, function(err, files) {
 			// get rid of the hidden files
-			files = files.filter(function(file) { return file.indexOf('.') !== 0 });
+			files = files.filter(function(file) { return file.indexOf('.') !== 0 })
+				.map(function(file) {
+					var fileTokens = file.split('_');
+					return {
+						file: file,
+						familyStyle: fileTokens[1],
+						user: fileTokens[0],
+					};
+				});
 
 			if (err) {
 				res.status(500).send(err.message);
@@ -194,7 +204,7 @@ var setRoutes = function(app){
 function getUsers(files) {
 	var users = files.map(function(file) {
 		// map each file to its substring before the first '_' (the user name)
-		return file.substring(0,file.indexOf('_'));
+		return file.file.substring(0,file.file.indexOf('_'));
 	}).filter(function(user, index, array) {
 		// get rid of the duplicates and empty users
 		return array.indexOf(user) === index && user !== '';
@@ -213,7 +223,7 @@ function getFontFamilies(files) {
 		// get rid of the duplicates
 		return array.indexOf(file) === index;
 	}).map(function(file) {
-		var family = file.substring(file.indexOf('_')+1).replace(/(\.[A-z]*)$/g,'');
+		var family = file.file.substring(file.file.indexOf('_')+1).replace(/(\.[A-z]*)$/g,'');
 		return { family: family, file: file};
 	});
 

@@ -8,15 +8,15 @@ var config = require('./config.js');
 var routes = require('./routes.js');
 var compression = require('compression');
 
-var outputDir = 'output/';
-var tempDir = 'tmp/';
+var outputDir = config.outputDir;
+var tempDir = config.tempDir;
 
 // set routes
 routes.setRoutes(app);
 
 // add cross origin authorizations
 app.use(cors({
-	origin:['https://newui.prototypo.io','https://dev.prototypo.io','https://app.prototypo.io',(config.host + config.port), 'https://beta.prototypo.io']
+	origin: config.corsOrigin,
 }));
 
 // enable gzip compressoin

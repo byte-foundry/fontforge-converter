@@ -9,29 +9,31 @@ html
 			include ../css/styles.css
 		style
 			each fontFamily in fontFamilies
-				| @font-face{font-family: #{fontFamily.family}; src: url('output/#{fontFamily.file}');} 
+				| @font-face{font-family: #{fontFamily.family}; src: url('output/#{fontFamily.file.file}');} 
 				
 	body.fontlist
-		header
-			div.logout_form
-				form(method='post' action='')
-					button.btn.btn-default(type='submit' name='log_out' value='true')= 'Log out'
-			h1.text-center= header1
+		header.navbar.navbar-default.navbar-static-top
+			div.container-fluid
+				form.navbar-right.navbar-form(method='post' action='')
+					button.navbar-btn.btn.btn-default(type='submit' name='log_out' value='true')= 'Log out'
 					
 		if remaining > 0
-			div.container
+			div.container-fluid
 				div.row.text-center
 					button.btn.btn-default.display_more#load_more Load <span id='more_count'>#{loadMore}</span> more, <span id='remaining_count'>#{remaining}</span> fonts remaining
-		div.container
+		div.container-fluid
 			div.row.text-center
-				div.col-md-6
+				div.col-md-3
 					ul.list-group#user_list
 						each user in users
 							li.list-group-item= user
-				div.col-md-6
-					ul.list-group.text-center#font_list
+				div.col-md-9
+					div.row#font_list
 						each file in files
-							- var family = file.substring(file.indexOf('_')+1).replace(/(\.[A-z]*)$/g,'');
-							li.list-group-item(style='font-family:#{family};')= file
+							- var family = file.file.substring(file.file.indexOf('_')+1).replace(/(\.[A-z]*)$/g,'');
+							div.col-md-4
+								div.panel.panel-default(style='font-family:#{family};')
+									div.panel-body(style='font-size:40px',contenteditable=true)= 'Quick Fox'
+									div.panel-footer(style='font-family: sans-serif')= file.familyStyle + ' ' + file.user
 		script
 			include ../js/client.js
