@@ -35,7 +35,7 @@ html
 								div.panel.panel-default(style='font-family:#{family};')
 									div.panel-body(style='font-size:2.4vw',contenteditable=true)= 'HANOGRES hamburgefonstiv'
 									div.panel-footer.container-fluid(style='font-family: sans-serif')
-										span.file_span= file.familyStyle
+										span.file_span(data-file=file.file)= file.familyStyle
 										span= ' '
 										span.user_span= file.user
 										div.download_font

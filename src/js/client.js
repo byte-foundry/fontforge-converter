@@ -129,7 +129,7 @@ function updateDocument(data) {
 	}
 
 	if (userList && fontList) {
-		var fonts = document.querySelectorAll('.font_span');
+		var fonts = document.querySelectorAll('.file_span');
 		var addedFonts = data.files.slice(fonts.length);
 		var fontsToAdd = [];
 		var users = document.querySelectorAll('.user');
@@ -138,7 +138,7 @@ function updateDocument(data) {
 		var newElement;
 		var currentFilter = false;
 
-		// filter user that are not already displayed
+		// filter users that are not already displayed
 		var i = 0;
 		addedUsers = data.users.filter(function(user) {
 			for(i=0; i<users.length; i++){
@@ -148,8 +148,14 @@ function updateDocument(data) {
 			}
 			return true;
 		});
-		addedFonts = data.files.filter(function(font) {
-			//filter here
+		// filter files that are not already displayed
+		addedFonts = data.files.filter(function(file) {
+			for(i=0; i<fonts.length; i++) {
+				if (fonts[i].getAttribute('data-file') === file.file){
+					return false;
+				}
+			}
+			return true;
 		});
 
 		for (var i=0; i<users.length; i++) {
