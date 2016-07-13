@@ -112,6 +112,25 @@ var setRoutes = function(app){
 		}
 	});
 
+	// set public font access route
+	app.get('/src/fonts/:font', function(req, res) {
+		if (req.session.user) {
+			if (req.params) {
+				if (req.params.font) {
+					fs.readFile('./src/fonts/' + req.params.font, function(err, data) {
+						if (err) {
+							res.status(404).end(err.message);
+						} else {
+							res.send(data);
+						}
+					});
+				}
+			}
+		} else {
+			res.status(403).end('Acces denied');
+		}
+	});
+
 	/**
 	* Display file list
 	* @param {object} - the request
