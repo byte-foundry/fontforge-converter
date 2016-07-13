@@ -9,7 +9,7 @@ html
 			include ../css/styles.css
 		style
 			each fontFamily in fontFamilies
-				| @font-face{font-family: #{fontFamily.family}; src: url('output/#{fontFamily.file.file}');} 
+				| @font-face{font-family: "#{fontFamily.family}"; src: url('output/#{fontFamily.file.file}');} 
 				
 	body.fontlist
 		header.navbar.navbar-default.navbar-static-top
@@ -32,7 +32,7 @@ html
 						each file in files
 							- var family = file.file.substring(file.file.indexOf('_')+1).replace(/(\.[A-z]*)$/g,'');
 							div.file.col-md-4(data-user=file.user)
-								div.panel.panel-default(style='font-family:#{family};')
+								div.panel.panel-default(style='font-family:"#{family}";')
 									div.panel-body(style='font-size:2.4vw',contenteditable=true)= 'HANOGRES hamburgefonstiv'
 									div.panel-footer.container-fluid(style='font-family: sans-serif')
 										span.file_span(data-file=file.file)= file.familyStyle

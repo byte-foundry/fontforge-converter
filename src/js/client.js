@@ -175,7 +175,7 @@ function updateDocument(data) {
 
 			newSubelement = document.createElement('div');
 			newSubelement.className = 'panel panel-default';
-			newSubelement.style.fontFamily = addedFonts[i].file.substring(addedFonts[i].file.indexOf('_')+1).replace(/(\.[A-z]*)$/g,'');
+			newSubelement.setAttribute('style','font-family:"' + addedFonts[i].file.substring(addedFonts[i].file.indexOf('_')+1).replace(/(\.[A-z]*)$/g,'') + '";');
 
 			newContentEditable = document.createElement('div');
 			newContentEditable.setAttribute('style','font-size:2.4vw');
@@ -186,7 +186,18 @@ function updateDocument(data) {
 			newFontnameElement = document.createElement('div');
 			newFontnameElement.setAttribute('style','font-family:sans-serif');
 			newFontnameElement.className = 'panel-footer container-fluid';
-			newFontnameElement.innerText = addedFonts[i].file;
+
+			newFileSpanElement = document.createElement('span');
+			newFileSpanElement.setAttribute('data-file',addedFonts[i].file);
+			newFileSpanElement.className = 'file_span';
+			newFileSpanElement.innerText = addedFonts[i].familyStyle;
+
+			newSpaceSpanElement = document.createElement('span');
+			newSpaceSpanElement.innerText = ' ';
+
+			newUserSpanElement = document.createElement('span');
+			newUserSpanElement.className = 'user_span';
+			newUserSpanElement.innerText = addedFonts[i].user;
 
 			newDownloadElement = document.createElement('div');
 			newDownloadElement.className = 'download_font';
@@ -195,6 +206,9 @@ function updateDocument(data) {
 			newElement.appendChild(newSubelement);
 			newSubelement.appendChild(newContentEditable);
 			newSubelement.appendChild(newFontnameElement);
+			newFontnameElement.appendChild(newFileSpanElement);
+			newFontnameElement.appendChild(newSpaceSpanElement);
+			newFontnameElement.appendChild(newUserSpanElement);
 			newFontnameElement.appendChild(newDownloadElement);
 
 			fontsToAdd.push(newElement);

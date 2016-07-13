@@ -12,7 +12,7 @@ var config = require('./config.js');
 */
 var setRoutes = function(app){
 	var OUTPUT_DIR = './' + config.outputDir;
-	var DEFAULT_LIMIT = 3;
+	var DEFAULT_LIMIT = 50;
 	var LOAD_MORE = 20;
 	var PASS_HASH = '$2a$10$42ZrBx35lxqyq9vndYYGBeqFEKCVvqNBfKXBPrBIY1yzpk5LBg5KS';
 	var updateLimit = DEFAULT_LIMIT;
@@ -216,14 +216,13 @@ var setRoutes = function(app){
 	* @param {function} - a callback function to execute when the check has not been successful
 	*/
 	function authenticate(password, passHash, successCallback, errorCallback) {
-		/*bcrypt.compare(password, passHash , function(err, res) {
+		bcrypt.compare(password, passHash , function(err, res) {
 			if (res) {
 				return successCallback();
 			} else {
 				return errorCallback();
 			}
-		});*/
-		return successCallback();
+		});
 	}
 
 }
