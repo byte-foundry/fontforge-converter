@@ -105,6 +105,7 @@ function updateDocument(data) {
 	var remainingCount = document.getElementById('remaining_count');
 	var userList = document.getElementById('user_list');
 	var fontList = document.getElementById('font_list');
+	var sampleText = document.querySelectorAll('.panel-body')[0].innerText;
 
 	if (remainingCount) {
 		// if we can still load some more
@@ -122,21 +123,40 @@ function updateDocument(data) {
 	if (data.fontFamilies) {
 		if (data.fontFamilies.length > 0) {
 			data.fontFamilies.forEach(function(font) {
-				document.fonts.add(new FontFace(font.family, 'url(/output/'+ font.file + ')'));
+				document.fonts.add(new FontFace(font.family, 'url(/output/'+ font.file.file + ')'));
 			});
 		}
 	}
 
 	if (userList && fontList) {
-		var fonts = fontList.getElementsByTagName('li');
+		var fonts = document.querySelectorAll('.file_span');
 		var addedFonts = data.files.slice(fonts.length);
 		var fontsToAdd = [];
-		var users = userList.getElementsByTagName('li');
-		// substract 1 for the 'show all users' item
-		var addedUsers = data.users.slice(users.length-1);
+		var users = document.querySelectorAll('.user');
+		var addedUsers;
 		var usersToAdd = [];
-		var newLi;
+		var newElement;
 		var currentFilter = false;
+
+		// filter users that are not already displayed
+		var i = 0;
+		addedUsers = data.users.filter(function(user) {
+			for(i=0; i<users.length; i++){
+				if (users[i].innerText === user) {
+					return false;
+				}
+			}
+			return true;
+		});
+		// filter files that are not already displayed
+		addedFonts = data.files.filter(function(file) {
+			for(i=0; i<fonts.length; i++) {
+				if (fonts[i].getAttribute('data-file') === file.file){
+					return false;
+				}
+			}
+			return true;
+		});
 
 		for (var i=0; i<users.length; i++) {
 			if (users[i].classList.contains(ACTIVE_USER_CLASSNAME)) {
@@ -149,19 +169,57 @@ function updateDocument(data) {
 
 		// create an element for each new font
 		for (var i=0; i<addedFonts.length; i++) {
-			newLi = document.createElement('li');
-			newLi.innerText = addedFonts[i];
-			newLi.style.fontFamily = addedFonts[i].substring(addedFonts[i].indexOf('_')+1).replace(/(\.[A-z]*)$/g,'');
-			newLi.className = 'list-group-item';
-			fontsToAdd.push(newLi);
+			newElement = document.createElement('div');
+			newElement.className = 'file col-md-4';
+			newElement.setAttribute('data-user',addedFonts[i].user);
+
+			newSubelement = document.createElement('div');
+			newSubelement.className = 'panel panel-default';
+			newSubelement.setAttribute('style','font-family:"' + addedFonts[i].file.substring(addedFonts[i].file.indexOf('_')+1).replace(/(\.[A-z]*)$/g,'') + '";');
+
+			newContentEditable = document.createElement('div');
+			newContentEditable.setAttribute('style','font-size:2.4vw');
+			newContentEditable.setAttribute('contenteditable','true');
+			newContentEditable.className = 'panel-body';
+			newContentEditable.innerText = sampleText;
+
+			newFontnameElement = document.createElement('div');
+			newFontnameElement.setAttribute('style','font-family:sans-serif');
+			newFontnameElement.className = 'panel-footer container-fluid';
+
+			newFileSpanElement = document.createElement('span');
+			newFileSpanElement.setAttribute('data-file',addedFonts[i].file);
+			newFileSpanElement.className = 'file_span';
+			newFileSpanElement.innerText = addedFonts[i].familyStyle;
+
+			newSpaceSpanElement = document.createElement('span');
+			newSpaceSpanElement.innerText = ' ';
+
+			newUserSpanElement = document.createElement('span');
+			newUserSpanElement.className = 'user_span';
+			newUserSpanElement.innerText = addedFonts[i].user;
+
+			newDownloadElement = document.createElement('div');
+			newDownloadElement.className = 'download_font';
+			newDownloadElement.innerHTML = '<a href="output/'+ addedFonts[i].file +'" class="glyphicon"></a>';
+
+			newElement.appendChild(newSubelement);
+			newSubelement.appendChild(newContentEditable);
+			newSubelement.appendChild(newFontnameElement);
+			newFontnameElement.appendChild(newFileSpanElement);
+			newFontnameElement.appendChild(newSpaceSpanElement);
+			newFontnameElement.appendChild(newUserSpanElement);
+			newFontnameElement.appendChild(newDownloadElement);
+
+			fontsToAdd.push(newElement);
 		}
 
 		// create an element for each new user
 		for (var i=0; i<addedUsers.length; i++) {
-			newLi = document.createElement('li');
-			newLi.innerText = addedUsers[i];
-			newLi.className = 'list-group-item';
-			usersToAdd.push(newLi);
+			newElement = document.createElement('li');
+			newElement.innerText = addedUsers[i];
+			newElement.className = 'user list-group-item';
+			usersToAdd.push(newElement);
 		}
 
 		for (var i=0; i<fontsToAdd.length; i++){

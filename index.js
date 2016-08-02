@@ -7,6 +7,11 @@ var cors = require('cors');
 var config = require('./config.js');
 var routes = require('./routes.js');
 var compression = require('compression');
+var slug = require('slug');
+
+var slugOptions = {
+	remove: /[0-9,\.,_,-]/g,
+}
 
 var outputDir = config.outputDir;
 var tempDir = config.tempDir;
@@ -61,7 +66,9 @@ var server = app.listen(config.port, function() {
 */
 function handleDownloadPostRequest(req, res) {
 	// build file name
-	var fileName = req.params.user + '_' + req.params.fontFam + '-' + req.params.fontStyle;
+	var fileName = req.params.user +
+		'_' + slug(req.params.fontFam, slugOptions) +
+		'-' + slug(req.params.fontStyle, slugOptions);
 
 	// add template to the file name
 	if (req.params.template) {

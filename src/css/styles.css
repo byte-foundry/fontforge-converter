@@ -34,3 +34,18 @@ p.error {
 .row.space-after {
 	margin-bottom: 40px;
 }
+.panel-footer {
+	position: relative;
+}
+.download_font{
+	bottom: 8px;
+	display: none;
+	position: absolute;
+	right: 10px;
+}
+.file:hover .download_font{
+	display: block;
+}
+.download_font a:before{
+	content: "\e026";
+}
