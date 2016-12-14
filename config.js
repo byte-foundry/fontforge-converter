@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'development') {
 	config = {
 		port: 80,
 		domain: 'http://merge.prototypo.io/',
-		corsOrigin: ['https://newui.prototypo.io','https://dev.prototypo.io','https://app.prototypo.io', 'https://beta.prototypo.io'],
+		corsOrigin: ['https://newui.prototypo.io','https://dev.prototypo.io','https://app.prototypo.io', 'https://beta.prototypo.io', 'http://localhost:9000'],
 	}
 }
 

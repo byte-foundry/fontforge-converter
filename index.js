@@ -33,7 +33,7 @@ app.post('/:font/:user',bodyParser.raw({type:'application/otf'}), function(req, 
 	fs.writeFile(tempDir + fileName + '.otf',req.body,
 		function(err) {
 
-			exec('./removeOverlap.pe ' + fileName + '.otf', function(err) {
+			exec('./removeOverlap.pe ' + fileName + '.otf', {maxBuffer: 1024 * 800}, function(err) {
 				if (err) {
 					console.log('Error while converting font with fileName: '+ fileName + err.message);
 					fs.unlinkSync(tempDir + fileName + '.otf');
@@ -82,7 +82,7 @@ function handleDownloadPostRequest(req, res) {
 	// run the removeOverlap script
 	if (req.params.overlap) {
 		fs.writeFile(tempDir + fileName + '.otf',req.body, function(err) {
-				exec('./removeOverlap.pe ' + fileName + '.otf', function(err) {
+				exec('./removeOverlap.pe ' + fileName + '.otf', {maxBuffer: 1024 * 800}, function(err) {
 					if (err) {
 						console.log('Error while converting font with fileName: '+ fileName + err.message);
 						fs.unlinkSync(tempDir + fileName + '.otf');
@@ -92,6 +92,11 @@ function handleDownloadPostRequest(req, res) {
 					res.download(outputDir + fileName + '.otf', function() {
 						console.log('Successfully converted font with fileName: '+ fileName);
 						fs.unlinkSync(tempDir + fileName + '.otf');
+						if (req.params.user === 'plumin') {
+							setTimeout(function() {
+								fs.unlinkSync(outputDir + fileName + '.otf');
+							}, 3000);
+						}
 					});
 				});
 		});
@@ -102,7 +107,13 @@ function handleDownloadPostRequest(req, res) {
 			}
 
 			console.log('Successfully downloaded font with fileName: ' + fileName);
-			res.download(outputDir + fileName + '.otf');
+			res.download(outputDir + fileName + '.otf', function() {
+				if (req.params.user === 'plumin') {
+					setTimeout(function() {
+						fs.unlinkSync(outputDir + fileName + '.otf');
+					}, 3000);
+				}
+			});
 		});
 	}
 

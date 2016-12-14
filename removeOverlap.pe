@@ -1,5 +1,6 @@
 #!/usr/local/bin/fontforge
 Open('tmp/'+ $1)
 SelectAll()
+Simplify()
 RemoveOverlap()
 Generate('output/' + $1:r + '.otf')
